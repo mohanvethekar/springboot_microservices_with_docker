@@ -1,5 +1,6 @@
 package com.microservices.microservicesproject.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.microservices.microservicesproject.dto.ProductRequest;
 import com.microservices.microservicesproject.model.Product;
 import com.microservices.microservicesproject.repository.ProductRepository;
@@ -25,6 +26,22 @@ public class ProductService {
 
         productRepository.save(product);
 //        System.out.println("Product saved with ID: " + product.getId());
+    }
+
+    public Product updateProduct(String id , Product updatedProduct){
+        Product existingproduct = productRepository.findById(id).orElse(null);//here product is optional measns if result is not found then return null else it will give error
+
+        if(existingproduct==null){
+            System.out.println("Product not found");
+            return null;
+        }
+
+        existingproduct.setName(updatedProduct.getName());
+        existingproduct.setDescription(updatedProduct.getDescription());
+        existingproduct.setPrice(updatedProduct.getPrice());
+
+        return  productRepository.save(existingproduct);
+
     }
 
     public List<Product> getAllProducts() {
